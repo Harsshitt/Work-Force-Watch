@@ -21,7 +21,7 @@ app.use(express.json());
 app.use('/user', userRouter);
 app.use('/employee', employeeRouter);
 app.use('/task', taskRouter);
-app.use('/task', contactRouter);
+app.use('/contact', contactRouter);
 
 const port = 5000;
 

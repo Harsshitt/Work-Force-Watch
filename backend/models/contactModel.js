@@ -1,9 +1,11 @@
 const {model , Schema} = require ('../connection');
 
 const mySchema = new Schema( {
-    name : {type :String , require :true},
+    fname : {type :String , require :true},
+    lname : {type :String , require :true},
     email : {type : String , require: true , unique: true}, 
-    number : Number, 
+    number : Number,
+    company: String, 
     message : {type : String }, 
    
     

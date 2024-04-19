@@ -1,36 +1,53 @@
+'use client';
+import React from "react";
+import { useFormik } from "formik";
+import toast from "react-hot-toast";
 
 
 const Contact = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  
 
-  const formik = useFormik({
+  const contactForm = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
       email: '',
-      phone: '',
+      fname: '',
+      lname:"",
+      number: '',
+      message: '',
+      company:""
     },
-    onSubmit: async (values) => {
-      setIsLoading(true);
-      try {
+    onSubmit: (values) => {
+      console.log(values);
+      
+      // sending request to client
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log('Submitted values:', values);
-        toast.success('Employee added successfully');
-        formik.resetForm();
-      } catch (error) {
-        console.error('Error adding employee:', error);
-        toast.error('Failed to add employee');
-      } finally {
-        setIsLoading(false);
-      }
-    },
-  });
+      fetch('http://localhost:5000/contact/add', {
+        method: 'POST',
+        body: JSON.stringify(values),
+        headers: {
+          'Content-Type' : 'application/json'
+        }
+      })
+      .then((response) => {
+        console.log(response.status);
+        if(response.status === 200){
+          toast.success('contact added successfully');
+          
+        }else{
+          toast.error('contact add failed')
+        }
+      }).catch((err) => {
+        console.log(err);
+        toast.error('contact add failed')
+      });
+
+    }
+  })
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Add Employee</h1>
-      <form onSubmit={formik.handleSubmit} className="space-y-4">
+    <div className="max-w-2xl mx-auto my-10">
+      <h1 className="text-3xl font-semibold text-gray-800 mb-6">Add Contact</h1>
+      <form onSubmit={contactForm.handleSubmit} className="space-y-4">
         <div>
           <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
             First Name
@@ -41,9 +58,9 @@ const Contact = () => {
             type="text"
             autoComplete="given-name"
             required
-            value={formik.values.firstName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            value={contactForm.values.firstName}
+            onChange={contactForm.handleChange}
+            
             className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -57,9 +74,9 @@ const Contact = () => {
             type="text"
             autoComplete="family-name"
             required
-            value={formik.values.lastName}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            value={contactForm.values.lastName}
+            onChange={contactForm.handleChange}
+            
             className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -73,9 +90,9 @@ const Contact = () => {
             type="email"
             autoComplete="email"
             required
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            value={contactForm.values.email}
+            onChange={contactForm.handleChange}
+        
             className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
@@ -84,24 +101,56 @@ const Contact = () => {
             Phone
           </label>
           <input
-            id="phone"
-            name="phone"
-            type="tel"
+            id="number"
+            name="number"
+            type="number"
             autoComplete="tel"
             required
-            value={formik.values.phone}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
+            value={contactForm.values.phone}
+            onChange={contactForm.handleChange}
+            
+            className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+        <div>
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+            Company
+          </label>
+          <input
+            id="company"
+            name="company"
+            type="text"
+            autoComplete="tel"
+            required
+            value={contactForm.values.company}
+            onChange={contactForm.handleChange}
+            
+            className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
+        </div>
+        <div>
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+            Message
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            type="text"
+            autoComplete="tel"
+            required
+            value={contactForm.values.message}
+            onChange={contactForm.handleChange}
+            
             className="mt-1 p-2 block w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </div>
         <div>
           <button
             type="submit"
-            disabled={isLoading}
+            
             className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
-            {isLoading ? 'Adding...' : 'Add Employee'}
+            Submit
           </button>
         </div>
       </form>
